@@ -1,61 +1,70 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = withDefaults(
   defineProps<{
-    status: 'in progress' | 'success' | 'warning' | 'error' | null // добавила null, возможно, доработаю. пока что мне не хватило 4 статусов для демонстрации
-    isDashboard?: boolean
-    percent: number
+    status: 'in progress' | 'success' | 'warning' | 'error' | null; // добавила null, возможно, доработаю. пока что мне не хватило 4 статусов для демонстрации
+    isDashboard?: boolean;
+    percent: number;
   }>(),
   {
-    status: 'in progress',
+    status: null,
     isDashboard: false,
     percent: 0,
   },
-)
+);
 
 const changedColor = computed(() => {
-  let red = 0
-  let green = 0
-  let blue = 0
+  let red = 0;
+  let green = 0;
+  let blue = 0;
   if (props.percent <= 33) {
-    red = Math.round(255 - props.percent * 4)
-    green = Math.round(props.percent * 2.5)
-    blue = Math.round(props.percent * 7.8)
+    red = Math.round(255 - props.percent * 4);
+    green = Math.round(props.percent * 2.5);
+    blue = Math.round(props.percent * 7.8);
   } else if (props.percent > 33 && props.percent <= 66) {
-    red = 0
-    green = Math.round(props.percent * 2.5)
-    blue = Math.round(255 - (props.percent - 32) * 2)
+    red = 0;
+    green = Math.round(props.percent * 2.5);
+    blue = Math.round(255 - (props.percent - 32) * 2);
   } else if (props.percent > 66) {
-    red = 0
-    blue = Math.round(255 - (props.percent - 32) * 2)
-    green = Math.round(112.5 + Math.round((props.percent - 32) * 1.5))
+    red = 0;
+    blue = Math.round(255 - (props.percent - 32) * 2);
+    green = Math.round(112.5 + Math.round((props.percent - 32) * 1.5));
   }
-  return `rgb(${Math.round(red)}, ${Math.round(green)}, ${Math.round(blue)})`
-})
+  return `rgb(${Math.round(red) < 0 ? 0 : Math.round(red)}, ${Math.round(green) < 0 ? 0 : Math.round(green)}, ${Math.round(blue) < 0 ? 0 : Math.round(blue)})`;
+});
 
 const circleColor = computed(() => {
   if (props.status === 'error') {
-    return 'red'
+    return 'red';
   } else if (props.status === 'success') {
-    return 'rgb(0, 215, 119)'
+    return 'rgb(0, 215, 119)';
   } else if (props.status === 'warning') {
-    return 'orange'
+    return 'orange';
   } else {
-    return changedColor.value
+    return changedColor.value;
   }
-})
+});
+
+const len = computed(() => {
+  if (props.isDashboard) {
+    return 2 * Math.PI * 90 - 155;
+  } else {
+    return 2 * Math.PI * 90;
+  }
+});
 
 const circleStyle = computed(() => {
-  const len = 2 * Math.PI * 90
-  const offset = len - (len * props.percent) / 100
+  const offset = len.value - (len.value * props.percent) / 100;
+  const dashArray = props.isDashboard
+    ? len.value + ' ' + (len.value + 155)
+    : len.value + ' ' + len.value;
   return {
-    strokeDasharray: len + ' ' + len,
+    strokeDasharray: dashArray,
     strokeDashoffset: offset,
     transition: 'stroke-dashoffset .2s linear',
-  }
-})
-
+  };
+});
 </script>
 
 <template>
@@ -75,6 +84,8 @@ const circleStyle = computed(() => {
         stroke-width="9"
         stroke="#ebebeb"
         fill="none"
+        :transform="isDashboard ? 'rotate(-220 100 100)' : ''"
+        :class="{ 'loader__background_type-dashboard': isDashboard }"
       ></circle>
       <circle
         class="loader__animate"
@@ -83,13 +94,13 @@ const circleStyle = computed(() => {
         r="90"
         stroke-width="9"
         fill="none"
-        transform="rotate(-90 100 100)"
+        :transform="isDashboard ? 'rotate(-220 100 100)' : 'rotate(-90 100 100)'"
         :stroke="circleColor"
         :style="circleStyle"
         stroke-linejoin="round"
         stroke-linecap="round"
       ></circle></svg
-    ><text class="loader-text" v-if="status === 'in progress' || !status"> {{ percent }}% </text>
+    ><text class="loader-text" v-if="percent < 100 || status === 'in progress'"> {{ percent }}% </text>
     <span v-else-if="status === 'error'" class="loader__icon">
       <svg xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 16 16">
         <path
@@ -97,7 +108,6 @@ const circleStyle = computed(() => {
         />
       </svg>
     </span>
-
     <svg
       class="loader__icon"
       xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +124,7 @@ const circleStyle = computed(() => {
       xmlns="http://www.w3.org/2000/svg"
       fill="rgb(0, 215, 119)"
       viewBox="0 0 16 16"
-      v-else-if="percent === 100 || status === 'success'"
+      v-else-if="status === 'success'"
     >
       <path
         d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"
@@ -163,5 +173,10 @@ const circleStyle = computed(() => {
 
 .loader__container {
   position: relative;
+}
+
+.loader__background_type-dashboard {
+  stroke-dasharray: 565.48;
+  stroke-dashoffset: 155;
 }
 </style>
