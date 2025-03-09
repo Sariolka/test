@@ -1,68 +1,73 @@
 <script setup lang="ts">
-import SvgComponent from '@/components/SvgComponent.vue'
-import { ref } from 'vue'
+import { ref } from 'vue';
+import { TIMEOUT } from '@/constants/constants.ts'
+import ProgressBar from '@/components/ProgressBar.vue';
 
-const percent = ref(0)
-const status = ref<'in progress' | 'success' | 'warning' | 'error' | null>('in progress')
-const interval = ref<number | null>(null)
+const percent = ref(0);
+const status = ref<'in progress' | 'success' | 'warning' | 'error' | null>('in progress');
+const interval = ref<number | null>(null);
+const isDashboard = ref(false);
 
 const setStatus = (newStatus: 'in progress' | 'success' | 'warning' | 'error' | null) => {
-  status.value = newStatus
+  status.value = newStatus;
   if (newStatus === 'error' || newStatus === 'warning') {
     if (interval.value) {
-      clearInterval(interval.value)
-      interval.value = null
+      clearInterval(interval.value);
+      interval.value = null;
     }
   }
-}
+};
 
 const handleStart = () => {
-  if (interval.value) return
-  setStatus('in progress')
+  if (interval.value) return;
+  setStatus('in progress');
   interval.value = setInterval(() => {
     if (percent.value < 100) {
-      percent.value += 1
+      percent.value += 1;
     } else if (status.value === 'error' || status.value === 'warning') {
-      stop()
-      return
-    } else if (status.value === 'success') {
-      percent.value = 100
+      stop();
+      return;
+    } else if (percent.value === 100) {
+      status.value = 'success'
     }
-  }, 100)
-}
+  }, TIMEOUT);
+};
 
 const handleStop = () => {
   if (interval.value) {
-    clearInterval(interval.value)
-    interval.value = null
+    clearInterval(interval.value);
+    interval.value = null;
   }
-}
+};
 const handleReset = () => {
-  interval.value = null
-  percent.value = 0
-  status.value = null
-  handleStop()
-}
+  handleStop();
+  percent.value = 0;
+  status.value = null;
+};
 
 const handlePlus = () => {
   if (percent.value < 100) {
     if (percent.value + 10 > 100) {
-      percent.value = 100
+      percent.value = 100;
     } else {
-      percent.value += 10
+      percent.value += 10;
     }
   }
-}
+};
 
 const handleMinus = () => {
   if (percent.value >= 0) {
     if (percent.value - 10 < 0) {
-      percent.value = 0
+      percent.value = 0;
     } else {
-      percent.value -= 10
+      percent.value -= 10;
     }
   }
-}
+};
+
+const handleSetDashboard = () => {
+  isDashboard.value = !isDashboard.value;
+};
 </script>
 
 <template>
@@ -78,9 +83,11 @@ const handleMinus = () => {
       <button class="main__btn main__btn_type-warning" @click="setStatus('warning')">
         Warning
       </button>
+      <button class="main__btn main__btn_type-dashboard" @click="handleSetDashboard">
+        Dashboard
+      </button>
     </div>
-    <SvgComponent :status="status" :percent="percent" />
-    <SvgComponent :status="status" :percent="percent" is-dashboard/>
+    <ProgressBar :status="status" :percent="percent" :is-dashboard="isDashboard" />
   </main>
 </template>
 
@@ -119,5 +126,9 @@ const handleMinus = () => {
 
 .main__btn_type-warning {
   background-color: orange;
+}
+
+.main__btn_type-dashboard {
+  background-color: black;
 }
 </style>
