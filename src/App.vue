@@ -6,7 +6,9 @@ import { RouterLink, RouterView } from 'vue-router';
   <header>
     <nav class="nav">
       <RouterLink activeClass="nav__link_active" class="nav__link" to="/">Progress Bar</RouterLink>
-      <RouterLink activeClass="nav__link_active" class="nav__link" to="/about">Diagram</RouterLink>
+      <RouterLink activeClass="nav__link_active" class="nav__link" to="/diagram"
+        >Diagram</RouterLink
+      >
     </nav>
   </header>
 

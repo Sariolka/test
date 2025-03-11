@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { TIMEOUT } from '@/constants/constants.ts'
+import { ref, watch } from 'vue';
 import ProgressBar from '@/components/ProgressBar.vue';
+import { FAST_TIMOUT, TIMEOUT } from '@/constants/constants.ts';
 
 const percent = ref(0);
 const status = ref<'in progress' | 'success' | 'warning' | 'error' | null>('in progress');
@@ -10,29 +10,43 @@ const isDashboard = ref(false);
 
 const setStatus = (newStatus: 'in progress' | 'success' | 'warning' | 'error' | null) => {
   status.value = newStatus;
-  if (newStatus === 'error' || newStatus === 'warning') {
-    if (interval.value) {
-      clearInterval(interval.value);
-      interval.value = null;
-    }
-  }
+  handleStop();
 };
 
-const handleStart = () => {
+const start = (timeout: number) => {
   if (interval.value) return;
-  setStatus('in progress');
+
   interval.value = setInterval(() => {
     if (percent.value < 100) {
       percent.value += 1;
-    } else if (status.value === 'error' || status.value === 'warning') {
+    } else {
       stop();
-      return;
-    } else if (percent.value === 100) {
-      status.value = 'success'
+      status.value = 'success';
     }
-  }, TIMEOUT);
+  }, timeout);
 };
 
+const stop = () => {
+  if (interval.value) {
+    clearInterval(interval.value);
+    interval.value = null;
+  }
+};
+
+watch(status, (newStatus) => {
+  if (newStatus === 'in progress') {
+    start(TIMEOUT);
+  } else if (newStatus === 'success') {
+    start(FAST_TIMOUT);
+  } else {
+    stop();
+  }
+});
+
+const handleStart = () => {
+  setStatus('in progress');
+  start(TIMEOUT);
+};
 const handleStop = () => {
   if (interval.value) {
     clearInterval(interval.value);
