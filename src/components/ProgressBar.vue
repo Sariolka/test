@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
@@ -8,7 +8,7 @@ const props = withDefaults(
     percent: number;
   }>(),
   {
-    status: null,
+    status: 'in progress',
     isDashboard: false,
     percent: 0,
   },
@@ -100,7 +100,7 @@ const circleStyle = computed(() => {
         stroke-linejoin="round"
         stroke-linecap="round"
       ></circle></svg
-    ><text class="loader-text" v-if="percent < 100 || status === 'in progress'"> {{ percent }}% </text>
+    ><text class="loader-text" v-if="status === 'in progress' || !status"> {{ percent }}% </text>
     <span v-else-if="status === 'error'" class="loader__icon">
       <svg xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 16 16">
         <path

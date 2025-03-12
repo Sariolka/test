@@ -1,20 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import ProgressBarView from '../views/ProgressBarView.vue';
+import { routes } from 'vue-router/auto-routes';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'bar',
-      component: ProgressBarView,
-    },
-    {
-      path: '/diagram',
-      name: 'diagram',
-      component: () => import('../views/DiagramView.vue'),
-    },
-  ],
+  routes: routes,
+  scrollBehavior() {
+    return { top: 0 };
+  },
 });
 
 export default router;
