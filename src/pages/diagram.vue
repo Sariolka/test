@@ -107,6 +107,10 @@ const chartData = computed(() => {
   width: 100%;
   max-height: 100vh;
   max-width: 1170px;
+
+  @media screen and (max-width: 1279px) {
+    align-items: center;
+  }
 }
 
 .diagram-page__title {
@@ -128,6 +132,7 @@ const chartData = computed(() => {
   @media screen and (max-width: 1279px) {
     flex-direction: column;
     gap: 30px;
+    padding-right: 0;
   }
 }
 

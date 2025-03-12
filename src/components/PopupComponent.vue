@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import type { ColorInputWithoutInstance } from 'tinycolor2';
 import { ColorPicker } from 'vue3-colorpicker';
 import ButtonAdd from '@/components/BaseButton.vue';
@@ -13,9 +13,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['add']);
-const pureColor = ref<ColorInputWithoutInstance>(
-  props.color || ('red' as ColorInputWithoutInstance),
-);
+const pureColor = ref<ColorInputWithoutInstance>(props.color || '#b0e0e6');
 const titleValue = ref(props.title || '');
 const percentValue = ref(props.percent || null);
 const isColorPickerOpen = ref(false);
@@ -56,11 +54,15 @@ const toggleOpenColorPicker = () => {
 const handleAddSector = () => {
   emit('add', { title: titleValue.value, percent: percentValue.value, color: pureColor.value });
 };
+
+// const changedColor = computed(() => {
+//   pureColor.value =
+// })
 </script>
 
 <template>
   <div class="modal" v-if="show" @click.self="closeModal" role="dialog">
-    <div class="modal__container" :class="{ modal__container_open: isColorPickerOpen }">
+    <div class="modal__container">
       <h3 class="modal__title">{{ color ? 'Изменение сектора' : 'Добавление сектора' }}</h3>
       <form class="modal__form" @submit.prevent="handleAddSector">
         <div
@@ -110,7 +112,7 @@ const handleAddSector = () => {
                 @blur="handleBlur"
               />
               <div class="modal__color-container">
-                <div class="modal__color" :style="{ backgroundColor: pureColor }"></div>
+                <div class="modal__color" :style="`background-color: ${pureColor}`"></div>
                 <button
                   class="modal__color-btn"
                   :class="{ 'modal__color-btn_close': !isColorPickerOpen }"
@@ -120,16 +122,15 @@ const handleAddSector = () => {
               </div>
             </div>
           </div>
-          <Transition>
-            <color-picker
-              v-model:pureColor="pureColor"
-              is-widget
-              disable-history
-              v-if="isColorPickerOpen"
-              format="hex"
-              picker-type="chrome"
-            />
-          </Transition>
+          <color-picker
+            v-model:pureColor="pureColor"
+            is-widget
+            shape="circle"
+            format="hex"
+            disable-history
+            v-if="isColorPickerOpen"
+            picker-type="chrome"
+          />
         </div>
         <ButtonAdd :title="color ? 'Изменить сектор' : 'Добавить сектор'" />
       </form>
@@ -162,12 +163,6 @@ const handleAddSector = () => {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  height: 386px;
-  transition: height 0.3s ease;
-}
-
-.modal__container_open {
-  height: 624px;
 }
 
 .modal__form {
@@ -260,15 +255,5 @@ const handleAddSector = () => {
 
 .vc-saturation {
   border-radius: 10px !important;
-}
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
 }
 </style>
