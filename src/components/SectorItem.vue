@@ -51,10 +51,11 @@ const props = defineProps<{
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
-  width: 101px;
+  width: 125.2px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-right: 5px;
 }
 
 .sector__percent {
@@ -62,13 +63,14 @@ const props = defineProps<{
   font-size: 16px;
   line-height: 24px;
   display: flex;
+  width: 80.9px;
   align-items: center;
+  justify-content: center;
 }
 
 .sector__left-side {
   display: flex;
   align-items: center;
-  gap: 24.2px;
 }
 
 .sector__line {
@@ -81,6 +83,7 @@ const props = defineProps<{
   height: 20px;
   width: 20px;
   border-radius: 50%;
+  margin-left: 24.2px;
 }
 
 .sector__controls {
