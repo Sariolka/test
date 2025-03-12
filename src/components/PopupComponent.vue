@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import type { ColorInputWithoutInstance } from 'tinycolor2';
 import { ColorPicker } from 'vue3-colorpicker';
-import ButtonAdd from '@/components/ButtonAdd.vue';
+import ButtonAdd from '@/components/BaseButton.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
@@ -60,7 +60,7 @@ const handleAddSector = () => {
 
 <template>
   <div class="modal" v-if="show" @click.self="closeModal" role="dialog">
-    <div class="modal__container" :class="{ modal__container_open: show }">
+    <div class="modal__container" :class="{ modal__container_open: isColorPickerOpen }">
       <h3 class="modal__title">{{ color ? 'Изменение сектора' : 'Добавление сектора' }}</h3>
       <form class="modal__form" @submit.prevent="handleAddSector">
         <div
@@ -85,6 +85,7 @@ const handleAddSector = () => {
           <input
             class="modal__input"
             type="text"
+            pattern="[0-9]*"
             id="percent"
             v-model="percentValue"
             @focus="handleFocus(2)"
@@ -119,14 +120,16 @@ const handleAddSector = () => {
               </div>
             </div>
           </div>
-          <color-picker
-            v-model:pureColor="pureColor"
-            is-widget
-            disable-history
-            v-if="isColorPickerOpen"
-            format="hex"
-            picker-type="chrome"
-          />
+          <Transition>
+            <color-picker
+              v-model:pureColor="pureColor"
+              is-widget
+              disable-history
+              v-if="isColorPickerOpen"
+              format="hex"
+              picker-type="chrome"
+            />
+          </Transition>
         </div>
         <ButtonAdd :title="color ? 'Изменить сектор' : 'Добавить сектор'" />
       </form>
@@ -142,11 +145,13 @@ const handleAddSector = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 0.3s ease;
+  overflow: hidden;
+  transition: opacity 0.1s linear;
+  transform-origin: top;
 }
 
 .modal__container {
@@ -157,10 +162,12 @@ const handleAddSector = () => {
   display: flex;
   flex-direction: column;
   gap: 22px;
-  transition: opacity 0.3s ease;
+  height: 386px;
+  transition: height 0.3s ease;
 }
 
 .modal__container_open {
+  height: 624px;
 }
 
 .modal__form {
@@ -253,5 +260,15 @@ const handleAddSector = () => {
 
 .vc-saturation {
   border-radius: 10px !important;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

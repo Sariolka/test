@@ -1,5 +1,13 @@
 export interface Sector {
-  title: string;
   percent: number;
+  title: string;
   color: string;
+}
+
+export interface Chart {
+  labels: string[];
+  datasets: {
+    backgroundColor: string[];
+    data: number[];
+  }[];
 }

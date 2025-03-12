@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import ProgressBar from '@/components/ProgressBar.vue';
 import { FAST_TIMOUT, TIMEOUT } from '@/constants/constants.ts';
+import ProgressBar from '@/components/ProgressBar.vue';
 
 const percent = ref(0);
 const status = ref<'in progress' | 'success' | 'warning' | 'error' | null>('in progress');
@@ -47,12 +47,14 @@ const handleStart = () => {
   setStatus('in progress');
   start(TIMEOUT);
 };
+
 const handleStop = () => {
   if (interval.value) {
     clearInterval(interval.value);
     interval.value = null;
   }
 };
+
 const handleReset = () => {
   handleStop();
   percent.value = 0;

@@ -39,6 +39,7 @@ const props = defineProps<{
   justify-content: space-between;
   padding: 18px 20px;
   border-radius: 10px;
+  gap: 10px;
   background-color: rgba(219, 223, 233, 0.2);
   font-weight: 400;
   font-size: 16px;
@@ -50,7 +51,10 @@ const props = defineProps<{
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
-  min-width: 101px;
+  width: 101px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sector__percent {
@@ -64,7 +68,7 @@ const props = defineProps<{
 .sector__left-side {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 24.2px;
 }
 
 .sector__line {
