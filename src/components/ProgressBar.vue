@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    status: 'in progress' | 'success' | 'warning' | 'error' | null; // добавила null, возможно, доработаю. пока что мне не хватило 4 статусов для демонстрации
+    status: 'in progress' | 'success' | 'warning' | 'error' | null; // добавлен null для демонстрации
     isDashboard?: boolean;
     percent: number;
   }>(),
