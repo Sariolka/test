@@ -3,17 +3,17 @@ import type { Sector } from '@/types/types.ts';
 
 export const data = ref<Sector[]>([
   {
-    title: 'Что делать',
+    title: 'Длинные заголовки?',
     percent: 33,
     color: '#FF6384',
   },
   {
-    title: 'с длинным',
+    title: 'Пересчитывать проценты?',
     percent: 33,
     color: '#FFCD56',
   },
   {
-    title: 'заголовком и процентами?',
+    title: 'Сектор-3',
     percent: 34,
     color: '#4BC0C0',
   },
