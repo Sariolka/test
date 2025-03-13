@@ -14,6 +14,7 @@ const props = withDefaults(
   },
 );
 
+//настройки меняющихся цветов
 const changedColor = computed(() => {
   let red = 0;
   let green = 0;
@@ -34,6 +35,7 @@ const changedColor = computed(() => {
   return `rgb(${Math.round(red) < 0 ? 0 : Math.round(red)}, ${Math.round(green) < 0 ? 0 : Math.round(green)}, ${Math.round(blue) < 0 ? 0 : Math.round(blue)})`;
 });
 
+//изменение цвета при изменении статуса
 const circleColor = computed(() => {
   if (props.status === 'error') {
     return 'red';
@@ -46,6 +48,7 @@ const circleColor = computed(() => {
   }
 });
 
+// длина окружности
 const len = computed(() => {
   if (props.isDashboard) {
     return 2 * Math.PI * 90 - 155;
@@ -54,6 +57,7 @@ const len = computed(() => {
   }
 });
 
+// изменение стилей
 const circleStyle = computed(() => {
   const offset = len.value - (len.value * props.percent) / 100;
   const dashArray = props.isDashboard
