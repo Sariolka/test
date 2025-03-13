@@ -56,6 +56,7 @@ const chartData = computed(() => {
     ],
   };
 });
+
 </script>
 
 <template>
@@ -63,7 +64,7 @@ const chartData = computed(() => {
     <h1 class="diagram-page__title">Круговая диаграмма</h1>
     <div class="diagram-page__content">
       <div class="diagram-page__forms">
-        <SectorList :data="data" @deleteSector="handleDeleteSector" @editSector="handleOpen" />
+        <SectorList :data="data" @deleteSector="handleDeleteSector" @editSector="handleOpen"/>
         <ButtonAdd @click="handleOpen" :title="'Добавить сектор'" />
       </div>
       <div class="diagram-page__circle-block">

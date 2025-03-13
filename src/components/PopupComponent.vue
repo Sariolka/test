@@ -31,10 +31,7 @@ const handleBlur = () => {
   currentInput.value = null;
 };
 
-const closeModal = () => {
-  props.handleCloseModal();
-};
-
+// слушатель для закрытия по esc
 onMounted(() => {
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape') {
@@ -48,17 +45,15 @@ onMounted(() => {
   });
 });
 
+const closeModal = () => {
+  props.handleCloseModal();
+};
+
 const toggleOpenColorPicker = () => {
   isColorPickerOpen.value = !isColorPickerOpen.value;
 };
 
 const handleSaveSector = () => {
-  console.log({
-    title: titleValue.value,
-    percent: percentValue.value,
-    color: pureColor.value,
-    isEdit: !!props.color,
-  });
   emit('save', {
     title: titleValue.value,
     percent: percentValue.value,

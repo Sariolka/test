@@ -5,6 +5,7 @@ import type { Sector } from '@/types/types.ts';
 const props = defineProps<{
   data: Sector[];
 }>();
+
 const emit = defineEmits(['editSector', 'deleteSector']);
 
 const handleEdit = (sector: Sector, index: number) => {

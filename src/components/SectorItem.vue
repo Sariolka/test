@@ -6,6 +6,7 @@ const props = defineProps<{
   index: number;
 }>();
 //что делать с длинными названиями?
+
 </script>
 
 <template>
