@@ -7,12 +7,13 @@ const props = defineProps<{
 }>();
 const emit = defineEmits(['editSector', 'deleteSector']);
 
-const handleEdit = (sector: Sector) => {
-  emit('editSector', sector);
+const handleEdit = (sector: Sector, index: number) => {
+  console.log(sector, index);
+  emit('editSector', sector, index);
 };
 
-const handleDelete = (title: string) => {
-  emit('deleteSector', title);
+const handleDelete = (index: number) => {
+  emit('deleteSector', index);
 };
 </script>
 
@@ -24,6 +25,7 @@ const handleDelete = (title: string) => {
       v-for="(item, index) in data"
       :key="index"
       :sector="item"
+      :index="index"
     />
   </ul>
 </template>
