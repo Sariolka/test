@@ -1,25 +1,26 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import type { ColorInputWithoutInstance } from 'tinycolor2';
 import { ColorPicker } from 'vue3-colorpicker';
 import ButtonAdd from '@/components/BaseButton.vue';
 
 const props = defineProps<{
   handleCloseModal: () => void;
-  show: boolean;
+  isOpen: boolean;
   title?: string;
   percent?: number;
   color?: string;
 }>();
 
-const emit = defineEmits(['add']);
-const pureColor = ref<ColorInputWithoutInstance>(props.color || '#b0e0e6');
+const emit = defineEmits(['save']);
+const pureColor = ref<ColorInputWithoutInstance>(props.color || '#296DB1FF');
 const titleValue = ref(props.title || '');
 const percentValue = ref(props.percent || null);
 const isColorPickerOpen = ref(false);
 const currentInput = ref<number | null>(null);
 const isFocused = ref(false);
 
+//кастомный фокус
 const handleFocus = (id: number) => {
   currentInput.value = id;
   isFocused.value = true;
@@ -51,20 +52,27 @@ const toggleOpenColorPicker = () => {
   isColorPickerOpen.value = !isColorPickerOpen.value;
 };
 
-const handleAddSector = () => {
-  emit('add', { title: titleValue.value, percent: percentValue.value, color: pureColor.value });
+const handleSaveSector = () => {
+  console.log({
+    title: titleValue.value,
+    percent: percentValue.value,
+    color: pureColor.value,
+    isEdit: !!props.color,
+  });
+  emit('save', {
+    title: titleValue.value,
+    percent: percentValue.value,
+    color: pureColor.value,
+    isEdit: !!props.color,
+  });
 };
-
-// const changedColor = computed(() => {
-//   pureColor.value =
-// })
 </script>
 
 <template>
-  <div class="modal" v-if="show" @click.self="closeModal" role="dialog">
+  <div class="modal" v-if="isOpen" @click.self="closeModal" role="dialog">
     <div class="modal__container">
       <h3 class="modal__title">{{ color ? 'Изменение сектора' : 'Добавление сектора' }}</h3>
-      <form class="modal__form" @submit.prevent="handleAddSector">
+      <form class="modal__form" @submit.prevent="handleSaveSector">
         <div
           class="modal__input-box"
           :class="{ 'modal__input-box_focused': isFocused && currentInput === 1 }"

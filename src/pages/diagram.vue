@@ -1,59 +1,48 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import type { Sector } from '@/types/types.ts';
 import PopupComponent from '@/components/PopupComponent.vue';
 import SectorList from '@/components/SectorList.vue';
 import ButtonAdd from '@/components/BaseButton.vue';
-import type { Sector } from '@/types/types.ts';
 import DiagramItem from '@/components/DiagramItem.vue';
 import CaptionList from '@/components/CaptionList.vue';
+import { data } from '@/mock/mock.ts';
 
-const show = ref(false);
+const isOpen = ref(false);
 const currentSector = ref<Sector | null>(null);
-
-const data = ref<Sector[]>([
-  {
-    title: 'Сектор-1',
-    percent: 25,
-    color: '#FF6384',
-  },
-  {
-    title: 'Сектор-2',
-    percent: 25,
-    color: '#FFCD56',
-  },
-  {
-    title: 'Сектор-3',
-    percent: 25,
-    color: '#4BC0C0',
-  },
-]);
+const currentSelectedIndex = ref<number | null>(null);
 
 const handleClose = () => {
   currentSector.value = null;
-  show.value = false;
+  currentSelectedIndex.value = null;
+  isOpen.value = false;
 };
 
-const handleOpen = () => {
-  show.value = true;
+const handleOpen = (sector?: Sector, index?: number) => {
+  if (sector && index) {
+    currentSector.value = sector;
+    currentSelectedIndex.value = index;
+  }
+  isOpen.value = true;
 };
 
-const handleAddNewSector = (sector: Sector) => {
+const handleSaveSector = (sector: Sector & { isEdit: boolean }) => {
   if (!sector.percent) sector.percent = 0;
   if (!sector.title) sector.title = 'Сектор без названия';
-  data.value.push(sector);
+  if (sector.isEdit && currentSelectedIndex.value !== null) {
+    data.value[currentSelectedIndex.value] = {
+      title: sector.title,
+      percent: sector.percent,
+      color: sector.color,
+    };
+  } else {
+    data.value.push(sector);
+  }
   handleClose();
 };
 
-const handleDeleteSector = (title: string) => {
-  const index = data.value.findIndex((sector) => sector.title === title);
-  if (index !== -1) {
-    data.value.splice(index, 1);
-  }
-};
-
-const handleEditSector = (sector: Sector) => {
-  currentSector.value = sector;
-  handleOpen();
+const handleDeleteSector = (index: number) => {
+  data.value = data.value.filter((_, i) => i !== index);
 };
 
 const chartData = computed(() => {
@@ -74,11 +63,7 @@ const chartData = computed(() => {
     <h1 class="diagram-page__title">Круговая диаграмма</h1>
     <div class="diagram-page__content">
       <div class="diagram-page__forms">
-        <SectorList
-          :data="data"
-          @deleteSector="handleDeleteSector"
-          @editSector="handleEditSector"
-        />
+        <SectorList :data="data" @deleteSector="handleDeleteSector" @editSector="handleOpen" />
         <ButtonAdd @click="handleOpen" :title="'Добавить сектор'" />
       </div>
       <div class="diagram-page__circle-block">
@@ -92,10 +77,10 @@ const chartData = computed(() => {
       :title="currentSector?.title"
       :percent="currentSector?.percent"
       :color="currentSector?.color"
-      :show="show"
-      v-if="show"
+      :isOpen="isOpen"
+      v-if="isOpen"
       :handle-close-modal="handleClose"
-      @add="handleAddNewSector"
+      @save="handleSaveSector"
     />
   </section>
 </template>

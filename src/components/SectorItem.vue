@@ -3,6 +3,7 @@ import type { Sector } from '@/types/types.ts';
 
 const props = defineProps<{
   sector: Sector;
+  index: number;
 }>();
 //что делать с длинными названиями?
 </script>
@@ -19,12 +20,12 @@ const props = defineProps<{
     <div class="sector__controls">
       <button
         class="sector__btn sector__btn_type-edit"
-        @click="$emit('edit', sector)"
+        @click="$emit('edit', sector, index)"
         aria-label="Изменить сектор"
       ></button>
       <button
         class="sector__btn sector__btn_type-delete"
-        @click="$emit('delete', sector.title)"
+        @click="$emit('delete', index)"
         aria-label="Удалить сектор"
       ></button>
     </div>
