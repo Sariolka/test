@@ -1,10 +1,10 @@
-export interface Sector {
+export interface ISector {
   percent: number;
   title: string;
   color: string;
 }
 
-export interface Chart {
+export interface IChart {
   labels: string[];
   datasets: {
     backgroundColor: string[];

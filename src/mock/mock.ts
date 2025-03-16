@@ -1,7 +1,7 @@
 import { ref } from 'vue';
-import type { Sector } from '@/types/types.ts';
+import type { ISector } from '@/types/types.ts';
 
-export const data = ref<Sector[]>([
+export const data = ref<ISector[]>([
   {
     title: 'Длинные заголовки?',
     percent: 33,

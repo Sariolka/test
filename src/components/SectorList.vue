@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import SectorItemComponent from '@/components/SectorItem.vue';
-import type { Sector } from '@/types/types.ts';
+import type { ISector } from '@/types/types.ts';
 
 const props = defineProps<{
-  data: Sector[];
+  data: ISector[];
 }>();
 
 const emit = defineEmits(['editSector', 'deleteSector']);
 
-const handleEdit = (sector: Sector, index: number) => {
+const handleEdit = (sector: ISector, index: number) => {
   console.log(sector, index);
   emit('editSector', sector, index);
 };

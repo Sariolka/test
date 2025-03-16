@@ -2,12 +2,12 @@
 import { Chart as ChartJS, ArcElement, Tooltip } from 'chart.js';
 import { Pie } from 'vue-chartjs';
 import { options } from '../utils/chartConfig.ts';
-import type { Chart } from '@/types/types.ts';
+import type { IChart } from '@/types/types.ts';
 
 ChartJS.register(ArcElement, Tooltip);
 
 const props = defineProps<{
-  data: Chart;
+  data: IChart;
 }>();
 </script>
 

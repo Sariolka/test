@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Sector } from '@/types/types.ts';
+import type { ISector } from '@/types/types.ts';
 
 const props = defineProps<{
-  sector: Sector;
+  sector: ISector;
   index: number;
 }>();
 //что делать с длинными названиями?
