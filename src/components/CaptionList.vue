@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import type { ISector } from '@/types/types.ts';
 import CaptionItem from '@/components/CaptionItem.vue';
-import type { Sector } from '@/types/types.ts';
 
 const props = defineProps<{
-  captions?: Sector[];
+  captions?: ISector[];
 }>();
 </script>
 

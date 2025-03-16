@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { Sector } from '@/types/types.ts';
+import type { ISector } from '@/types/types.ts';
 import PopupComponent from '@/components/PopupComponent.vue';
 import SectorList from '@/components/SectorList.vue';
 import ButtonAdd from '@/components/BaseButton.vue';
@@ -9,7 +9,7 @@ import CaptionList from '@/components/CaptionList.vue';
 import { data } from '@/mock/mock.ts';
 
 const isOpen = ref(false);
-const currentSector = ref<Sector | null>(null);
+const currentSector = ref<ISector | null>(null);
 const currentSelectedIndex = ref<number | null>(null);
 
 const handleClose = () => {
@@ -18,7 +18,7 @@ const handleClose = () => {
   isOpen.value = false;
 };
 
-const handleOpen = (sector?: Sector, index?: number) => {
+const handleOpen = (sector?: ISector, index?: number) => {
   if (sector && index) {
     currentSector.value = sector;
     currentSelectedIndex.value = index;
@@ -26,7 +26,7 @@ const handleOpen = (sector?: Sector, index?: number) => {
   isOpen.value = true;
 };
 
-const handleSaveSector = (sector: Sector & { isEdit: boolean }) => {
+const handleSaveSector = (sector: ISector & { isEdit: boolean }) => {
   if (!sector.percent) sector.percent = 0;
   if (!sector.title) sector.title = 'Сектор без названия';
   if (sector.isEdit && currentSelectedIndex.value !== null) {
